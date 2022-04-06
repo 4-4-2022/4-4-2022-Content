@@ -1,10 +1,12 @@
 package com.revature.repository;
 
+import java.util.Set;
+
 import com.revature.model.Cupcake;
 
 public interface CupcakeRepository {
 	
-	public Cupcake[] findAllCupcakes();
+	public Set<Cupcake> findAllCupcakes();
 	public Cupcake findCupcakeByFlavor(String flavor);
 	
 }

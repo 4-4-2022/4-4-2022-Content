@@ -1,15 +1,17 @@
 //The package declaration MUST be present.
 package com.revature;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
+import com.revature.client.AppUI;
 /*
  * If a type is in a different package, it must be imported in order to be used
  * here. You MUST use the fully qualified class name.
  */
 import com.revature.model.Cupcake;
-import com.revature.model.Dessert;
-import com.revature.model.Edible;
 import com.revature.repository.CupcakeRepository;
 import com.revature.repository.CupcakeRepositoryImpl;
 
@@ -21,13 +23,8 @@ public class Driver {
 		 * Let's just go ahead and grab the existing cupcakes right off the bat.
 		 */
 		CupcakeRepository cupcakeRepository = new CupcakeRepositoryImpl();
-		Cupcake[] cupcakes = cupcakeRepository.findAllCupcakes();
-		
-		Dessert dessert = new Cupcake();
-		Edible dessert2 = new Cupcake();
-		
-		System.out.println(cupcakes[0]);
-		
+		Set<Cupcake> cupcakes = cupcakeRepository.findAllCupcakes();
+				
 		/*
 		 * I need to get the user input now. Note that scanner is a text
 		 * scanner that we use to parse input. It is frequently used with the
@@ -48,31 +45,31 @@ public class Driver {
 		 * 
 		 * We'll have a flag (a boolean variable) will determine whether or not the loop keeps running.
 		 */
-		boolean isUserInterested = false;
+		boolean isUserInterested = true;
 		
-//		while(isUserInterested) {
-//		AppUI.printWelcomeMenu();
-//		
-//		int userSelection = scanner.nextInt();
-//		scanner.nextLine(); //Leaving this here as there is a newline character in the stream
-//		
-//		switch(userSelection) {
-//		case 1:
-//			for (Cupcake cupcake : cupcakes) {
-//				System.out.println(cupcake);
-//			}
-//			break;
-//		case 2:
-//			AppUI.printBusinessInformation();
-//			break;
-//		case 3: 
-//			System.out.println("Bye bye!");
-//			isUserInterested = false;
-//			break;
-//		default:
-//			System.out.println("Okay. Seriously. That's not a menu option.");
-//		}
-//		}
+		while(isUserInterested) {
+		AppUI.printWelcomeMenu();
+		
+		int userSelection = scanner.nextInt();
+		scanner.nextLine(); //Leaving this here as there is a newline character in the stream
+		
+		switch(userSelection) {
+		case 1:
+			for (Cupcake cupcake : cupcakes) {
+				System.out.println(cupcake);
+			}
+			break;
+		case 2:
+			AppUI.printBusinessInformation();
+			break;
+		case 3: 
+			System.out.println("Bye bye!");
+			isUserInterested = false;
+			break;
+		default:
+			System.out.println("Okay. Seriously. That's not a menu option.");
+		}
+		}
 
 		scanner.close();
 		

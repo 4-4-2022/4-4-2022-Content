@@ -1,5 +1,8 @@
 package com.revature.repository;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.revature.model.Cupcake;
 
 /*
@@ -17,18 +20,36 @@ public class CupcakeRepositoryImpl implements CupcakeRepository{
 	 * benefit of being able to use this single reference to access all of the
 	 * cupcakes. That said, arrays do come with a con: their length can't be
 	 * changed. That is to say, their size is fixed.
+	 * 
+	 * Collection
+	 * List
 	 */
 
-	//Our first order of business is creating the array. This is our mock data. It is currently "empty" but has space for 10 cupcakes.
-	private Cupcake[] cupcakes = new Cupcake[10];
+	/*Our first order of business is creating the array. This is our mock data. It is currently "empty" but has space for 10 cupcakes.
+	 * 
+	 * NOTE: This was originally just an array, but we realized that the array wasn't meeting our needs. It was fixed in size, and we
+	 * needed something that could accommodate for an unknown number of cupcakes at any given time. We've changed it into
+	 * an ArrayList (an implementation of the List interface).
+	 * 
+	 * Please note that it is not good practice to not use generics with collections. Generics simply add some compile-time safety
+	 * by ensuring that only objects of a certain type can be added to a collection.
+	 * 
+	 * NOTE: We have once again changed the group of cupcakes. It is now set. Sets are different lists in that: Queue
+	 * 
+	 * 1) Lists allow duplicates while sets do not allow for duplicates.
+	 * 2) Lists will preserve the order of the elements while sets do not guarantee the order.
+	 * 3) Lists support random access while sets do not.
+	 */
+	
+	private Set<Cupcake> cupcakes = new HashSet<>();
 	
 	// We're using this constructor to initialize some of the mock cupcakes.
 	public CupcakeRepositoryImpl() {
 		super();
-		this.cupcakes[0] = new Cupcake("Champagne Cake", (short) 3, "Sugar Bee Sweets", 100, true, true);
-		this.cupcakes[1] = new Cupcake("Chocolate Cake", (short) 2, "Sugar Bee Sweets", 400, false, false);
-		this.cupcakes[2] = new Cupcake("Strawberry Cake", (short) 2, "Sugar Bee Sweets", 300, true, false);
-		this.cupcakes[3] = new Cupcake("Carrot Cake", (short) 2, "Sugar Bee Sweets", 250, false, true);
+		this.cupcakes.add(new Cupcake("Champagne Cake", (short) 3, "Sugar Bee Sweets", 100, true, true));
+		this.cupcakes.add(new Cupcake("Chocolate Cake", (short) 2, "Sugar Bee Sweets", 400, false, false));
+		this.cupcakes.add(new Cupcake("Strawberry Cake", (short) 2, "Sugar Bee Sweets", 300, true, false));
+		this.cupcakes.add(new Cupcake("Carrot Cake", (short) 2, "Sugar Bee Sweets", 250, false, true));
 	}
 	
 	/*
@@ -37,7 +58,7 @@ public class CupcakeRepositoryImpl implements CupcakeRepository{
 	 * allow for this. That said, let's make a method that returns the array of cupcakes to the caller.
 	 */
 	
-	public Cupcake[] findAllCupcakes() {
+	public Set<Cupcake> findAllCupcakes() {
 		return this.cupcakes;
 	}
 
