@@ -16,9 +16,10 @@ package com.revature.model;
  * - Technically speaking, Java Beans should also implement the Serializable interface.
  * 
  * Note also that we have made Cupcake a Dessert by extending the Dessert class. This means that cupcake inherits properties
- * and methods from Dessert.
+ * and methods from Dessert. Keep in mind that a class in Java can only extend one class. This is why we say that Java does not
+ * support multiple inheritance.
  */
-public class Cupcake extends Dessert{
+public class Cupcake extends Dessert implements Edible{
 	/*
 	 * These are instance variables. They are accessible throughout the entire class.
 	 * They don't have to be initialized because they receive default values.
@@ -45,7 +46,7 @@ public class Cupcake extends Dessert{
 	private String cupcakeFlavor;
 	private short cost;
 	private String bakery;
-	
+		
 	/*
 	 * By default, Java provides you with a "default constructor" for every class you
 	 * create IF you do not create your own constructor for the class. We use a constructor
@@ -156,6 +157,12 @@ public class Cupcake extends Dessert{
 	@Override
 	public void cook() {
 		System.out.println("Something specific to cooking cupcakes.");
+		
+	}
+
+	@Override
+	public void provideNutrients() {
+		// TODO Auto-generated method stub
 		
 	}
 	

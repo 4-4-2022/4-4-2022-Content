@@ -9,7 +9,9 @@ import java.util.Scanner;
  */
 import com.revature.model.Cupcake;
 import com.revature.model.Dessert;
+import com.revature.model.Edible;
 import com.revature.repository.CupcakeRepository;
+import com.revature.repository.CupcakeRepositoryImpl;
 
 public class Driver {
 
@@ -18,10 +20,11 @@ public class Driver {
 		/*
 		 * Let's just go ahead and grab the existing cupcakes right off the bat.
 		 */
-		CupcakeRepository cupcakeRepository = new CupcakeRepository();
+		CupcakeRepository cupcakeRepository = new CupcakeRepositoryImpl();
 		Cupcake[] cupcakes = cupcakeRepository.findAllCupcakes();
 		
 		Dessert dessert = new Cupcake();
+		Edible dessert2 = new Cupcake();
 		
 		System.out.println(cupcakes[0]);
 		
