@@ -1,13 +1,10 @@
 //The package declaration MUST be present.
 package com.revature;
 
-import java.io.FileNotFoundException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
 
 import com.revature.client.AppUI;
-import com.revature.exception.InvalidCupcakeException;
 /*
  * If a type is in a different package, it must be imported in order to be used
  * here. You MUST use the fully qualified class name.
@@ -27,7 +24,7 @@ public class Driver {
 		CupcakeRepository cupcakeRepository = new CupcakeRepositoryImpl();
 		CupcakeService cupcakeService = new CupcakeService();
 		Set<Cupcake> cupcakes = cupcakeRepository.findAllCupcakes();
-
+		
 		/*
 		 * I need to get the user input now. Note that scanner is a text scanner that we
 		 * use to parse input. It is frequently used with the standard input stream
