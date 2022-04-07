@@ -20,8 +20,8 @@ public class AppUI {
 				+ " by her lovely batch saying that she makes really good cupcakes.");
 	}
 	
-	public static int handleUserSelection(int userSelection, Scanner scanner) {
-		
+	public static int handleUserSelection(Scanner scanner) {
+		int userSelection = 0;
 		try {
 			userSelection = scanner.nextInt();
 		}catch(InputMismatchException e) {

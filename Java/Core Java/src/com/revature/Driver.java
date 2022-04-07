@@ -1,13 +1,10 @@
 //The package declaration MUST be present.
 package com.revature;
 
-import java.io.FileNotFoundException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
 
 import com.revature.client.AppUI;
-import com.revature.exception.InvalidCupcakeException;
 /*
  * If a type is in a different package, it must be imported in order to be used
  * here. You MUST use the fully qualified class name.
@@ -53,8 +50,7 @@ public class Driver {
 
 		while (isUserInterested) {
 			AppUI.printWelcomeMenu();
-			int userSelection = 0;
-			userSelection = AppUI.handleUserSelection(userSelection, scanner);
+			int userSelection = AppUI.handleUserSelection( scanner);
 
 			switch (userSelection) {
 			case 1:

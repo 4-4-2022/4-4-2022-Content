@@ -50,8 +50,7 @@ public class Driver {
 
 		while (isUserInterested) {
 			AppUI.printWelcomeMenu();
-			int userSelection = 0;
-			userSelection = AppUI.handleUserSelection(userSelection, scanner);
+			int userSelection =AppUI.handleUserSelection(scanner);
 
 			switch (userSelection) {
 			case 1:
