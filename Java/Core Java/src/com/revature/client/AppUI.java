@@ -8,7 +8,7 @@ public class AppUI {
 	public static void printWelcomeMenu() {
 		System.out.println(
 				"Welcome, user! What would you like to do?\n"
-				+ "1) View Cupcakes \n2) About Christina's Cupcakes \n3)Exit Application " + "\nPlease enter the number of your selection: ");
+				+ "1) View Cupcakes \n2) About Christina's Cupcakes \n3) View Cupcakes By Flavor \n4) Exit " + "\nPlease enter the number of your selection: ");
 	}
 	
 	public static void printBusinessInformation() {

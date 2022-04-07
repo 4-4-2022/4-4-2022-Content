@@ -62,9 +62,33 @@ public class CupcakeRepositoryImpl implements CupcakeRepository{
 		return this.cupcakes;
 	}
 
+	/**
+	 * This method iterates over our repository of cupcakes and finds the cupcake of a specific flavor.
+	 * 
+	 * @param flavor the flavor of the cupcake that should be returned
+	 */
 	@Override
 	public Cupcake findCupcakeByFlavor(String flavor) {
-		// TODO Auto-generated method stub
+		
+		for(Cupcake cupcake : cupcakes) {
+			if(cupcake.getCupcakeFlavor().equalsIgnoreCase(flavor)) {
+				return cupcake;
+			}
+		}
 		return null;
+	}
+	
+	@Override
+	public Set<Cupcake> findCupcakesByFlavor(String...flavors) {
+		Set<Cupcake> requestedCupcakes = new HashSet<>();
+		
+		for(Cupcake cupcake : cupcakes) {
+			for(String flavor : flavors) {
+				if(cupcake.getCupcakeFlavor().equalsIgnoreCase(flavor)) {
+					requestedCupcakes.add(cupcake);
+				}
+			}
+		}
+		return requestedCupcakes;
 	}
 }
