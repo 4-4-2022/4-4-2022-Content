@@ -10,8 +10,13 @@ import com.revature.model.Cupcake;
  * This Cupcake repository is my source of data concerning "records" of the cupcakes we have
  * in stock. I don't have a connection to a DB right now, so I'll have to have some sort hardcoded
  * array for the time being.
+ * 
+ * This class has also been modified so that it is a Singleton.
  */
 public class CupcakeRepositoryImpl implements CupcakeRepository{
+	
+	private static CupcakeRepositoryImpl cupcakeRepository;
+	public static int counter;
 
 	/*
 	 * In order to create an instance (an object) of our Cupcake class, we've used
@@ -21,9 +26,6 @@ public class CupcakeRepositoryImpl implements CupcakeRepository{
 	 * benefit of being able to use this single reference to access all of the
 	 * cupcakes. That said, arrays do come with a con: their length can't be
 	 * changed. That is to say, their size is fixed.
-	 * 
-	 * Collection
-	 * List
 	 */
 
 	/*Our first order of business is creating the array. This is our mock data. It is currently "empty" but has space for 10 cupcakes.
@@ -44,13 +46,32 @@ public class CupcakeRepositoryImpl implements CupcakeRepository{
 	
 	private Set<Cupcake> cupcakes = new TreeSet<>();
 	
-	// We're using this constructor to initialize some of the mock cupcakes.
-	public CupcakeRepositoryImpl() {
+	/*We're using this constructor to initialize some of the mock cupcakes. For the sake of turning this class into a Singleton, we have
+	 * made the constructor private so that instances cannot be freely created throughout the application.
+	 */
+	
+	private CupcakeRepositoryImpl() {
 		super();
 		this.cupcakes.add(new Cupcake("Champagne Cake", (short) 3, "Sugar Bee Sweets", 100, true, true));
 		this.cupcakes.add(new Cupcake("Chocolate Cake", (short) 20, "Sugar Bee Sweets", 400, false, false));
 		this.cupcakes.add(new Cupcake("Strawberry Cake", (short) 1, "Sugar Bee Sweets", 300, true, false));
 		this.cupcakes.add(new Cupcake("Carrot Cake", (short) 200, "Sugar Bee Sweets", 250, false, true));
+		counter++;
+	}
+	
+	/*
+	 * When building a Singleton, it is typical to see a method that returns the single instance of this type to the caller. We create the
+	 * single instance within the context of this class and return that same instance to the caller every single time this method is called.
+	 * 
+	 * We've added the synchronized keyword here in order to prevent multiple instances of this type from being from created in a
+	 * multi-threaded environment (as in our demo earlier). Yes, synchronization makes the program slower, but it prevents us from
+	 * our breaking our design pattern.
+	 */
+	public static synchronized CupcakeRepositoryImpl getCupcakeRepository() {
+		if(cupcakeRepository == null) {
+			cupcakeRepository = new CupcakeRepositoryImpl();
+		}
+		return cupcakeRepository;
 	}
 	
 	/*

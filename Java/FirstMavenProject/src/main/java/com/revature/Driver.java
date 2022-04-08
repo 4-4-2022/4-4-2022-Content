@@ -1,6 +1,8 @@
 //The package declaration MUST be present.
 package com.revature;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -17,11 +19,11 @@ import com.revature.service.CupcakeService;
 public class Driver {
 
 	public static void main(String[] args) {
-
+		
 		/*
 		 * Let's just go ahead and grab the existing cupcakes right off the bat.
 		 */
-		CupcakeRepository cupcakeRepository = new CupcakeRepositoryImpl();
+		CupcakeRepository cupcakeRepository = CupcakeRepositoryImpl.getCupcakeRepository();
 		CupcakeService cupcakeService = new CupcakeService();
 		Set<Cupcake> cupcakes = cupcakeRepository.findAllCupcakes();
 		

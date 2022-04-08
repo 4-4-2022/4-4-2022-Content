@@ -25,7 +25,7 @@ public class CupcakeService {
 	private CupcakeRepository cupcakeRepository;
 	
 	public CupcakeService() {
-		this.cupcakeRepository = new CupcakeRepositoryImpl();
+		this.cupcakeRepository = CupcakeRepositoryImpl.getCupcakeRepository();
 	}
 	//Error
 	/**

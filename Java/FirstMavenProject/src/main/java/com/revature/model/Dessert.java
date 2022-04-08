@@ -1,5 +1,7 @@
 package com.revature.model;
 
+import java.io.Serializable;
+
 /*
  * We will use this class as a base class for our shop's desserts. The idea is that cupcakes (as well as ice cream and cupcakes
  * and chocolate strawberries, etc.) all have some properties in common at the very least. For instance, all foods have nutrition
@@ -7,11 +9,18 @@ package com.revature.model;
  * 
  * We've now turned Dessert into an abstract classes. Abstract classes are allowed to have abstract methods. The point of an abstract
  * class is to be inherited from.
+ * 
+ * Serialization entails taking data in one format and transforming into another format. The basic Java serialization takes a Java object and
+ * writes it as Java byte code. In order to serialize a Java type using this approach, that type must implement the Serializable interface.
  */
-public abstract class Dessert {
+public abstract class Dessert implements Serializable{
 
 	// Providing base properties of desserts
-	private int calories;
+	/*
+	 * The "calories" field has been marked as transient. The transient keyword ensures that the field will not be serialized; Java will
+	 * skip over this field when it serializes any Dessert.
+	 */
+	private transient int calories;
 	private boolean isGlutenFree;
 	private boolean isVegan;
 

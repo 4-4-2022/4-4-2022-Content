@@ -51,7 +51,13 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	private String cupcakeFlavor;
 	private short cost;
 	private String bakery;
-		
+	/**
+	 * This variable is static and will be used to count the number of cupcake instances that are created in this application. When
+	 * a member of a class is static, it is shared across all instances of that class. That is to say, there will only ever be ONE copy of
+	 * cupcakeCount variable. We've made it public so that we can easily access it elsewhere.
+	 */
+	public static int cupcakeCount;
+	
 	/*
 	 * By default, Java provides you with a "default constructor" for every class you
 	 * create IF you do not create your own constructor for the class. We use a constructor
@@ -64,6 +70,7 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	public Cupcake() {
 		//This is always implied to be the first line of any constructor.
 		super();
+		cupcakeCount++;
 	}
 	
 	/*
@@ -74,6 +81,7 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 		this.cupcakeFlavor = cupcakeFlavor;
 		this.cost = cost;
 		this.bakery = bakery;
+		cupcakeCount++;
 	}
 	
 	/*
