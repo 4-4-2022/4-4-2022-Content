@@ -24,8 +24,14 @@ public class ConnectionFactory {
 		 * a connection to a database or even set additional configuration such as login timeouts.
 		 * SQLException (Class): It's just an exception that is thrown when something goes wrong when
 		 * you're working with JDBC.
+		 * 
+		 * Please note that JDBC runs in "autocommit mode" by default. This means that it actually
+		 * autocommits transactions for, which is why we haven't done any manual transaction control
+		 * in this demo. You can turn the autocommit by setting autocommit to false using the
+		 * setAutoCommit method.
 		 */
 		Connection conn = null;
+		
 		try {
 		conn = DriverManager.getConnection(
 				System.getenv("db_url"), 

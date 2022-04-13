@@ -49,7 +49,7 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	 * access to a member from within the class in which that member is declared.
 	 */
 	private String cupcakeFlavor;
-	private short cost;
+	private float cost;
 	/*
 	 * Because of the paradigm mismatch between SQL and Java, you might sometimes find yourself
 	 * representing data in "strange" ways as this field goes against the idea of using an OOP
@@ -81,7 +81,7 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	/*
 	 * This is an overload of our constructor that uses the class's fields.
 	 */
-	public Cupcake(String cupcakeFlavor, short cost, int bakery_id, int calories, boolean isGlutenFree, boolean isVegan) {
+	public Cupcake(String cupcakeFlavor, float cost, int bakery_id, int calories, boolean isGlutenFree, boolean isVegan) {
 		super(calories, isGlutenFree, isVegan);
 		this.cupcakeFlavor = cupcakeFlavor;
 		this.cost = cost;
@@ -103,11 +103,11 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 		this.cupcakeFlavor = cupcakeFlavor;
 	}
 
-	public short getCost() {
+	public float getCost() {
 		return cost;
 	}
 
-	public void setCost(short cost) {
+	public void setCost(float cost) {
 		this.cost = cost;
 	}
 
@@ -118,14 +118,12 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	public void setBakery(int bakery_id) {
 		this.bakery_id = bakery_id;
 	}
+	
 
 	/*
 	 * This method is inherited from the Object class.
-	 */
-	
-
-	
-	/*
+	 *
+	 *
 	 * This method is used to choose a String representation of instances of this class.
 	 * This method is inherited from the Object class and we are overriding it here.
 	 */
@@ -134,12 +132,14 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 		return "Cupcake [cupcakeFlavor=" + cupcakeFlavor + ", cost=" + cost + ", bakery=" + bakery_id + ", calories=" + this.getCalories() + "]";
 	}
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + bakery_id;
-		result = prime * result + cost;
+		result = prime * result + Float.floatToIntBits(cost);
 		result = prime * result + ((cupcakeFlavor == null) ? 0 : cupcakeFlavor.hashCode());
 		return result;
 	}
@@ -155,7 +155,7 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 		Cupcake other = (Cupcake) obj;
 		if (bakery_id != other.bakery_id)
 			return false;
-		if (cost != other.cost)
+		if (Float.floatToIntBits(cost) != Float.floatToIntBits(other.cost))
 			return false;
 		if (cupcakeFlavor == null) {
 			if (other.cupcakeFlavor != null)
@@ -186,7 +186,7 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	 */
 	@Override
 	public int compareTo(Cupcake o) {
-		return this.cost - o.cost;
+		return this.cupcakeFlavor.compareTo(o.cupcakeFlavor);
 	}
 	
 }

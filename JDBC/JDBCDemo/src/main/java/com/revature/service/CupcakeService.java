@@ -49,4 +49,8 @@ public class CupcakeService {
 	public Set<Cupcake> findAllCupcakes(){
 		return this.cupcakeRepository.findAllCupcakes();
 	}
+	
+	public void save(Cupcake cupcake) {
+		this.cupcakeRepository.save(cupcake);
+	}
 }

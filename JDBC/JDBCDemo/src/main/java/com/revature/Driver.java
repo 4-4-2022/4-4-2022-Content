@@ -1,12 +1,10 @@
 //The package declaration MUST be present.
 package com.revature;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 import com.revature.client.AppUI;
+import com.revature.model.Cupcake;
 import com.revature.service.CupcakeService;
 
 public class Driver {
@@ -60,6 +58,10 @@ public class Driver {
 				System.out.println(cupcakeService.findCupcakesByFlavor(cupcakeService.takeCupcakeInfo(scanner)));
 				break;
 			case 4:
+				Cupcake newCupcake = AppUI.getCupcakeInformation(scanner);
+				cupcakeService.save(newCupcake);
+				break;
+			case 5:
 				AppUI.sayBye();
 				isUserInterested = false;
 				break;

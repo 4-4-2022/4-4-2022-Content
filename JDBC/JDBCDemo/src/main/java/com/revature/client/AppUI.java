@@ -3,6 +3,8 @@ package com.revature.client;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.revature.model.Cupcake;
+
 public class AppUI {
 
 	/*
@@ -11,7 +13,9 @@ public class AppUI {
 	public static void printWelcomeMenu() {
 		System.out.println(
 				"Welcome, user! What would you like to do?\n"
-				+ "1) View Cupcakes \n2) About Christina's Cupcakes \n3) View Cupcakes By Flavor \n4) Exit " + "\nPlease enter the number of your selection: ");
+				+ "1) View Cupcakes \n2) About Christina's Cupcakes \n3) "
+				+ "View Cupcakes By Flavor \n4) "
+				+ "Add New Cupcake \n5)Exit" + "\nPlease enter the number of your selection: ");
 	}
 	
 	public static void printBusinessInformation() {
@@ -51,5 +55,26 @@ public class AppUI {
 		}
 		scanner.nextLine(); // Leaving this here as there is a newline character in the stream
 		return userSelection;
+	}
+	
+	public static Cupcake getCupcakeInformation(Scanner scanner) {
+		/*
+		 * Yes, you should be doing some exception and validating the user inputs.
+		 */
+		Cupcake cupcake = new Cupcake();
+		System.out.println("Enter your new cupcake information: ");
+		System.out.println("Cupcake Flavor: ");
+		cupcake.setCupcakeFlavor(scanner.nextLine());
+		System.out.println("Enter the Cupcake's Cost: ");
+		cupcake.setCost(scanner.nextFloat());
+		System.out.println("Enter Bakery ID: ");
+		cupcake.setBakery(scanner.nextInt());
+		System.out.println("Enter Cupcake Calories: ");
+		cupcake.setCalories(scanner.nextInt());
+		System.out.println("Is it Gluten Free? Type true/false: ");
+		cupcake.setGlutenFree(Boolean.parseBoolean(scanner.nextLine()));
+		System.out.println("Is it vegan? Type true/false: ");
+		cupcake.setVegan(Boolean.parseBoolean(scanner.nextLine()));
+		return cupcake;
 	}
 }
