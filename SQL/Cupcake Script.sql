@@ -4,6 +4,24 @@
  * 
  * DDL pertains to the creation of the structures/objects that will organize our data.
  * The most common object is a table.
+ * 
+ * Note that when creating your tables, you'll want to keep normalization in mind. Normalization
+ * entails reducing/removing redundancy from our schema. This ultimately makes the data easier to
+ * work with.
+ * 
+ * There are several normalization levels, though you're only required to know 4 of them:
+ * 
+ * 0NF - no normalization whatsoever; you're not using primary keys, data is not atomic
+ * 1NF - you're using primary keys so that you can uniquely identify each record, all data is
+ * "atomic", meaning that each piece of data (e.g. data in a column) is as minimal as possible.
+ * For instance, you should NOT have a comma separated list of values in a column.
+ * 2NF - you get this one "for free" if you're not using any composite keys; this level entails
+ * removing partial dependencies. A partial dependency describes a situation in which a column that is
+ * not a part of the key depends on a portion of the key.
+ * 3NF - this level is about removing transitive dependencies; if a column A depends on a column B and
+ * column B depends on column C, then column A really depends on column C.
+ * 
+ * "The key (1NF), the whole key (2NF), nothing but the key (3NF)."
  */
 
 drop table cupcake;
@@ -13,7 +31,7 @@ create table if not exists cupcake(
 	cupcake_cost numeric not null,
 	--We should just reference our existing bakery information rather than respecifying it.
 	-- This is a foreign key constraint.
-	cupcake_bakery_id integer references bakery(bakery_id),
+	cupcake_bakery_id integer references bakery(bakery_id) /*on delete cascade*/,
 	cupcake_calories numeric not null check (cupcake_calories >= 0),
 	cupcake_is_gluten_free boolean not null,
 	cupcake_is_vegan boolean not null
@@ -22,7 +40,7 @@ create table if not exists cupcake(
 drop table bakery;
 create table if not exists bakery(
 -- Note that a primary key constraint specifies that a column is unique and not null.
-	bakery_id integer primary key,
+	bakery_id serial primary key,
 	bakery_name varchar unique not null,
 	bakery_street varchar not null,
 	bakery_state varchar not null,
@@ -64,6 +82,7 @@ alter table cupcake alter column cupcake_bakery set data type text;
 -- The "*" represents all columns on the table. You can be more specific about the retrieved
 -- columns however.
 select * from cupcake;
+delete from bakery;
 select * from bakery;
 select cupcake_cost, cupcake_flavor, cupcake_bakery from cupcake;
 select * from cupcake where cupcake_calories <= 300;
@@ -73,23 +92,30 @@ select * from cupcake where cupcake_calories <= 300;
  * Note that we have done a multi insert, but of course you don't have to insert multiple
  * cupcakes at once.
  */
-insert into cupcake values('German Chocolate', 2.50, 2, 500, false, false),
-('Strawberry', 4, 2, 400, true, true);
-insert into cupcake values('Lava Cake', 1, 1, 1000, false, false);
-insert into cupcake values('Carrot Cake', 6, 1, 0, true, false);
+insert into cupcake values('German Chocolate', 2.50, 4, 500, false, false),
+('Strawberry', 4, 4, 400, true, true);
+insert into cupcake values('Lava Cake', 1, 4, 1000, false, false);
+insert into cupcake values('Nothing Bundt Cake', 1, 4, 1000, false, false);
+insert into cupcake values('Bubble Cakes', 1, 4, 1000, false, false);
+insert into cupcake values('Carrot Cake', 6, 4, 0, true, false);
 insert into cupcake values('Upsidedown Cake', 6, null, 0, true, false);
-insert into bakery values(1, 'Sugar Bee Sweets', 'West Street', 'TX', '87643', 'Wedding Cakes');
-insert into bakery values(2, 'CC Bakery', 'Christina Street', 'IL', '77777', null);
+insert into bakery values(3, 'Sugar Bee Sweets', 'West Street', 'TX', '87643', 'Wedding Cakes');
+insert into bakery values(default, 'CC Bakery', 'Christina Street', 'IL', '77777', null);
+insert into bakery values(default, 'Abundant Cupcakes', 'Abundant Street', 'NY', '77777', null);
+insert into bakery values(default, 'Scarce Cupcakes', 'Scarcity Street', 'NY', '77777', null);
 insert into cupcake_bakery values('Strawberry', 1);
 insert into cupcake_bakery values('Lava Cake', 1);
 insert into cupcake_bakery values('Lava Cake', 2);
-
 
 -- Updating a record. ALWAYS use a where clause.
 update cupcake set cupcake_calories = 350 where cupcake_flavor = 'Carrot Cake';
 
 -- Deleting a record. Again, ALWAYS use a where clause.
 delete from cupcake where cupcake_flavor = 'Strawberry';
+delete from bakery where bakery_id = 3;
+
+select * from cupcake;
+select * from bakery;
 
 /*
  * Our 4th sublanguage of SQL is called Transaction Control Language (TCL). TCL pertains to
