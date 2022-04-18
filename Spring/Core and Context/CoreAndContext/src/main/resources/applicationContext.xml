@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file will be used to generally configure our ApplicationContext and tell Spring which beans we want it
+to manage the life cycle of. It does not have to be called "applicationContext.xml"; this was just my preference.
+Yes, the root tag, as specified in the XSD, does have to be "beans".-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        
+        <!-- Let's define our first bean. We want Spring framework to create an instance of our CupcakeRepositoryImpl
+        and manage its life cycle as that will help us reduce tight coupling. 
+        
+        Note our bean "scope". The scope determines how Spring handles creation of the bean. By default, the scope is
+        "singleton". This means that Spring will only create a single instance of the type. Note that there are other
+        scopes such as "prototype", "session", and "request".-->
+        
+        <bean name="cupcakeRepository" class="com.revature.repository.CupcakeRepositoryImpl" scope="singleton"></bean>
+        
+        <!-- We need to tell Spring that there is a relationshp between our two beans. This is called "bean wiring". -->
+        <bean name="cupcakeService" class="com.revature.service.CupcakeService">
+        	<!--  <property name="cupcakeRepository" ref="cupcakeRepository"></property> -->
+        	<constructor-arg index="0" ref="cupcakeRepository"></constructor-arg>
+        </bean>
+        
+</beans>
