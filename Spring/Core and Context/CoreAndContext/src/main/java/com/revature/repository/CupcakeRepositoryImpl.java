@@ -8,10 +8,21 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.stereotype.Repository;
+
 import com.revature.model.Cupcake;
 import com.revature.util.ConnectionFactory;
 import com.revature.util.ResourceCloser;
 
+/*
+ * This annotation is referred to as a "Spring stereotype". A stereotype is a specialized annotation (it's specifically
+ * a specialized version of @Component annotation which provides the most generic way of adding a bean to the container)
+ * that allows us to instruct Spring create a bean of the type of the annotated class. @Repository is specifically
+ * designed to be used with a type that belongs to the data layer of your application. Note that we've given this
+ * bean a name using the "value" attribute, but that the attribute is optional, meaning that you can just supply
+ * a name with specifying the "value" portion.
+ */
+@Repository(value = "cupcakeRepository")
 public class CupcakeRepositoryImpl implements CupcakeRepository{
 	
 	

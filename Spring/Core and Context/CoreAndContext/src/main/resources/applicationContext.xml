@@ -20,10 +20,30 @@ Yes, the root tag, as specified in the XSD, does have to be "beans".-->
         
         <bean name="cupcakeRepository" class="com.revature.repository.CupcakeRepositoryImpl" scope="singleton"></bean>
         
-        <!-- We need to tell Spring that there is a relationshp between our two beans. This is called "bean wiring". -->
-        <bean name="cupcakeService" class="com.revature.service.CupcakeService">
+        <!-- We need to tell Spring that there is a relationshp between our two beans. This is called "bean wiring".
+        Note that our first attempt here is manual bean wiring. We are explicitly telling Spring which beans should
+        be wired in. 
+        
+        We can also use "autowiring". This allows the framework to autodetect which beans should be wired in. There
+        are a few different strategies that Spring can use to autodetect these beans. We can tell Spring to autowire
+        by:
+        
+        byName: Spring looks for a bean of a specific name in the IOC container and chooses the bean name which matches
+        the property name (on the class). This is the most specific way of autowiring. Note that as we have autowired
+        here, Spring is wanting to use the default setter injection. Note that this method is often used because it
+        helps remove any ambiguity regarding which bean should be wired in.
+        
+        byType: Spring looks for a bean of a specific type in the IOC container and chooses the bean that has the type
+        that matches the type of the field on the class. If you have multiple beans of this type in the IOC container,
+        this isn't a good strategy.
+        
+        constructor: Simimlar to byType, but instead Spring looks for a bean of a specific type in the IOC container
+        and tries to match that type to the type of a paramter in the constructor.
+        
+        -->
+        <bean name="cupcakeService" class="com.revature.service.CupcakeService" autowire="byType">
         	<!--  <property name="cupcakeRepository" ref="cupcakeRepository"></property> -->
-        	<constructor-arg index="0" ref="cupcakeRepository"></constructor-arg>
+        	<!-- <constructor-arg index="0" ref="cupcakeRepository"></constructor-arg> -->
         </bean>
         
 </beans>

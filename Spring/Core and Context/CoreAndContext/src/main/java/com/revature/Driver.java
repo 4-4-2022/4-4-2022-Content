@@ -4,13 +4,12 @@ package com.revature;
 import java.util.Scanner;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.revature.client.AppUI;
 import com.revature.model.Cupcake;
-import com.revature.repository.CupcakeRepository;
-import com.revature.repository.CupcakeRepositoryImpl;
 import com.revature.service.CupcakeService;
+import com.revature.util.AppConfig;
 
 public class Driver {
 
@@ -18,11 +17,17 @@ public class Driver {
 		
 		
 		/*
-		 * Let's just go ahead and grab the existing cupcakes right off the bat.
+		 * We originally used a ClassPathXmlApplicationContext implementation of our ApplicationContext because
+		 * we were using an XML file to configure our beans. That said, you typically use an annotation-based
+		 * style with Spring. We have to change our implementation to the AnnotationConfigApplicationContext.
+		 * 
+		 * Let's just go ahead and grab the existing cupcakes from the container right off the bat.
 		 */
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+//		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 		CupcakeService cupcakeService = context.getBean("cupcakeService", CupcakeService.class);
-
+		
+		
 		/*
 		 * I need to get the user input now. Note that scanner is a text scanner that we
 		 * use to parse input. It is frequently used with the standard input stream
