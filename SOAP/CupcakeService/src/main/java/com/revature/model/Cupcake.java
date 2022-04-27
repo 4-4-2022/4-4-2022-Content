@@ -18,13 +18,13 @@ import javax.persistence.Table;
 @Entity
 
 /*
- * This annotation allows us to map this particular class to a table in the database. We can
- * specify the name, but it is optional as the class name will just be used as the table name
- * by default.
+ * This annotation allows us to map this particular class to a table in the
+ * database. We can specify the name, but it is optional as the class name will
+ * just be used as the table name by default.
  */
 @Table(name = "cupcake")
-public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
-	
+public class Cupcake extends Dessert implements Edible, Comparable<Cupcake> {
+
 	/*
 	 * The @Id annotation specifies that this column is the primary key.
 	 */
@@ -33,17 +33,20 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	private String cupcakeFlavor;
 	@Column(name = "cupcake_cost", nullable = false)
 	private float cost;
-	
+	@Column
+	private int stock;
+
 	public Cupcake() {
 		super();
 	}
-	
-	public Cupcake(String cupcakeFlavor, float cost, int bakery_id, int calories, boolean isGlutenFree, boolean isVegan) {
-		super(calories, isGlutenFree, isVegan);
+
+	public Cupcake(String cupcakeFlavor, float cost, int stock) {
+		super();
 		this.cupcakeFlavor = cupcakeFlavor;
 		this.cost = cost;
+		this.stock = stock;
 	}
-	
+
 	public String getCupcakeFlavor() {
 		return cupcakeFlavor;
 	}
@@ -59,11 +62,18 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 	public void setCost(float cost) {
 		this.cost = cost;
 	}
-	
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
 
 	@Override
 	public String toString() {
-		return "Cupcake [cupcakeFlavor=" + cupcakeFlavor + ", cost=" + cost + "]";
+		return "Cupcake [cupcakeFlavor=" + cupcakeFlavor + ", cost=" + cost + ", stock=" + stock + "]";
 	}
 
 	@Override
@@ -72,6 +82,7 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 		int result = 1;
 		result = prime * result + Float.floatToIntBits(cost);
 		result = prime * result + ((cupcakeFlavor == null) ? 0 : cupcakeFlavor.hashCode());
+		result = prime * result + stock;
 		return result;
 	}
 
@@ -91,28 +102,30 @@ public class Cupcake extends Dessert implements Edible, Comparable<Cupcake>{
 				return false;
 		} else if (!cupcakeFlavor.equals(other.cupcakeFlavor))
 			return false;
+		if (stock != other.stock)
+			return false;
 		return true;
 	}
 
 	@Override
 	public void cook() {
 		System.out.println("Something specific to cooking cupcakes.");
-		
+
 	}
 
 	@Override
 	public void provideNutrients() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
-	 * We must implement this method in a such a way that it reflects what we think makes one cupcake "greater" or "less" than another
-	 * cupcake.
+	 * We must implement this method in a such a way that it reflects what we think
+	 * makes one cupcake "greater" or "less" than another cupcake.
 	 */
 	@Override
 	public int compareTo(Cupcake o) {
 		return this.cupcakeFlavor.compareTo(o.cupcakeFlavor);
 	}
-	
+
 }

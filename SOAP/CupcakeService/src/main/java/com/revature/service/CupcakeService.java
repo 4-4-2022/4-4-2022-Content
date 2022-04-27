@@ -21,4 +21,5 @@ public interface CupcakeService {
 
 	public List<Cupcake> findAll();
 	public void save(Cupcake cupcake);
+	public void receiveMessage(String message);
 }

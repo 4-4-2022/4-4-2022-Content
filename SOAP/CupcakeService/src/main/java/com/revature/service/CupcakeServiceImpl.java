@@ -52,4 +52,11 @@ public class CupcakeServiceImpl implements CupcakeService{
 	public void save(Cupcake cupcake) {
 		this.cupcakeRepository.save(cupcake);
 	}
+
+	@Override
+	@WebMethod
+	public void receiveMessage(String message) {
+		System.out.println(message);
+		
+	}
 }
