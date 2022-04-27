@@ -17,12 +17,14 @@ import com.revature.model.Cupcake;
  * interface.
  */
 @Repository("cupcakeRepository")
-public interface CupcakeRepository extends JpaRepository<Cupcake, Integer>{
+public interface CupcakeRepository extends JpaRepository<Cupcake, String>{
 	
 	public List<Cupcake> findAll();
+	List<Cupcake> findAllById(Iterable<String> ids);
 	public Cupcake findByCupcakeFlavor(String flavor);
 	public List<Cupcake> findByCostGreaterThan(float cost);
 	public <S extends Cupcake> S save(Cupcake cake);
 	public void delete(Cupcake cupcake);
+	<S extends Cupcake> List<S> saveAll(Iterable<S> entities);
 	
 }

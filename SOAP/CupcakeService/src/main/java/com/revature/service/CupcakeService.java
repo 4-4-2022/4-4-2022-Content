@@ -1,6 +1,7 @@
 package com.revature.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.jws.WebService;
 
@@ -21,5 +22,7 @@ public interface CupcakeService {
 
 	public List<Cupcake> findAll();
 	public void save(Cupcake cupcake);
+	public void saveAll(Map<String, Integer> items);
 	public void receiveMessage(String message);
+	
 }

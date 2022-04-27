@@ -1,6 +1,8 @@
 package com.revature.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -58,5 +60,20 @@ public class CupcakeServiceImpl implements CupcakeService{
 	public void receiveMessage(String message) {
 		System.out.println(message);
 		
+	}
+
+	@Override
+	@WebMethod
+	public void saveAll(Map<String, Integer> items) {
+		List<Cupcake> cupcakesToUpdate = this.cupcakeRepository.findAllById(items.keySet());
+		System.out.println(cupcakesToUpdate);
+		for(String flavor : items.keySet()) {
+			for(Cupcake cupcake : cupcakesToUpdate) {
+				if(cupcake.getCupcakeFlavor().equals(flavor)) {
+					cupcake.setStock(cupcake.getStock() - items.get(flavor));
+				}
+			}
+		}
+		this.cupcakeRepository.saveAll(cupcakesToUpdate);
 	}
 }

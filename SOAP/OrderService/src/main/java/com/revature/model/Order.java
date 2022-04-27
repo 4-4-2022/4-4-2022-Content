@@ -1,15 +1,10 @@
 package com.revature.model;
 
-import java.sql.Date;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -31,21 +26,17 @@ public class Order {
 	private int user_id;
 	@Column(name = "status")
 	private String status;
-	@ManyToMany
-	@JoinTable
-	private Set<OrderQuantity> orderQuanity;
 
 	public Order() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Order(int id, int user_id, String status, Set<OrderQuantity> orderQuanity) {
+	public Order(int id, int user_id, String status) {
 		super();
 		this.id = id;
 		this.user_id = user_id;
 		this.status = status;
-		this.orderQuanity = orderQuanity;
 	}
 
 	public int getId() {
@@ -72,20 +63,11 @@ public class Order {
 		this.status = status;
 	}
 
-	public Set<OrderQuantity> getOrderQuanity() {
-		return orderQuanity;
-	}
-
-	public void setOrderQuanity(Set<OrderQuantity> orderQuanity) {
-		this.orderQuanity = orderQuanity;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result + ((orderQuanity == null) ? 0 : orderQuanity.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + user_id;
 		return result;
@@ -102,11 +84,6 @@ public class Order {
 		Order other = (Order) obj;
 		if (id != other.id)
 			return false;
-		if (orderQuanity == null) {
-			if (other.orderQuanity != null)
-				return false;
-		} else if (!orderQuanity.equals(other.orderQuanity))
-			return false;
 		if (status == null) {
 			if (other.status != null)
 				return false;
@@ -119,8 +96,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", user_id=" + user_id + ", status=" + status + ", orderQuanity=" + orderQuanity
-				+ "]";
+		return "Order [id=" + id + ", user_id=" + user_id + ", status=" + status + "]";
 	}
 
 }
