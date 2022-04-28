@@ -13,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.revature.service.CupcakeServiceImpl;
-
 /*
  * This class will serve as our logging aspect. An aspect represents a modularization of a cross-cutting concern.
  * As logging is a concern that spans multiple layers of our application, we want to centralize the place where we
