@@ -29,7 +29,7 @@ import com.revature.service.CupcakeService;
 @Component("loggingAspect")
 public class LoggingAspect {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CupcakeService.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
 	/*
 	 * Our first order of business is to tell Spring where we would like to log. In other words, we're telling Spring
