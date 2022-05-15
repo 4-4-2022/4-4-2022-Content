@@ -1,0 +1,18 @@
+What is Mulesoft?
+What is Anypoint Platform?
+What is RAML? Why do we use it?
+What are some RAML keywords?
+Why would you use Mulesoft? What problems does Mulesoft help solve?
+Which technologies does Mule use under the hood?
+What is a Mule flow?
+What is a private flow?
+What triggers a flow?
+What is a Mule event? What does it consist of?
+How do you access query parameters? URI parameters? The payload? Variables?
+What are some common components?
+What is a connector? Examples?
+How do we route events in Mule? (e.g. Choice Router, etc.)
+What is Dataweave?
+What is a Mule error? What is the difference between on error continue and on error propagate?
+Is there a default error handler?
+What is APIkit?
