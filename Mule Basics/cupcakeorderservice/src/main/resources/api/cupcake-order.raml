@@ -1,0 +1,70 @@
+#%RAML 1.0
+title: cupcake-order
+version: v1
+
+# We are simply defining how our public-facing API should behave. We want to detail the resources that it should expose to the client. Note that we don't care about what the producer services offer in this case; we're just detailing what the public-facing API will expose to us. Fortunately, RAML (RESTful API Modeling Language) provides a simple syntax for describing an API.
+
+# We have a custom type that we've created. We must import it here. To be fair, we don't have to import it here and give it an alias, but if don't import it, we'll have a repetitive RAML spec.
+types:
+  cupcake: !include ./types/cupcake.raml
+
+# This is optional, but using resource types can save us a bit of time later. Resource types allow us to provide some shared context for all of our resources. For instance, we can specify that all "collections" that support GET requests should have similar descriptions.
+resourceTypes:
+  collection:
+    description: This resource represents a collection of <<resourcePath|!pluralize>>
+    get:
+      description: Get <<resourcePathName>> of the entity!
+  collection-item:
+    description: This resource represents a single entity.
+
+# Let's start by defining our endpoints. What endpoints should be supported?
+
+/cupcake:
+    # We can also define which HTTP methods this resource 
+  description: This resource corresponds to all cupcake data that the public-facing API might provide.
+  /all:
+    type: collection
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              
+  /new:
+    description: This resource allows the client to send new cupcake information to the server.
+    post:
+      body:
+        application/json:
+          type: cupcake
+  /{flavor}:
+    get:
+  /cost:
+    get:
+      description: 
+        A resource that returns cupcakes within a cost range.
+      queryParameters:
+        cost1:
+          description: The lower range for the cupcake cost
+          type: integer
+          example: 230
+        cost2:
+          description: The upper range for the cupcake cost
+          type: integer
+          example: 900
+
+
+  
+/order:
+  description: This resource corresponds to all order information that the SOAP service can provide.
+  /all:
+    type: collection
+    get:
+      # Detailing which HTTP responses the client should expect.
+      responses:
+        200:
+          body:
+            application/json:
+        404:
+          body:
+            text/plain:
+          

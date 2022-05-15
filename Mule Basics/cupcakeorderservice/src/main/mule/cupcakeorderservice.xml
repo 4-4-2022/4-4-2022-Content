@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<!-- A Mule flow is a building block of a Mule application. A flow typically consists of a listener and several
+	other components that help build the logic of the flow. There are components, for instance, that transform data
+	as we move it one from one source to another, that validate data, components (called connectors) that allow you to
+	connect to other web services. There are even components that allow you to connect to JMS queues and even components
+	that allow you to watermark so that your application knows where you left off while reading a file for example. 
+	
+	This flow sends a simple to the client after the client sends a request to our public facing API.-->
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4a2426b8-b838-4d3c-911c-de2d67d37942" >
+		<http:listener-connection host="localhost" port="8088" />
+	</http:listener-config>
+	<db:config name="Postgres_Database_Config" doc:name="Database Config" doc:id="ad90aecb-fe50-41ce-af88-f695c205ebca" >
+		<db:generic-connection url="${db_url}" driverClassName="org.postgresql.Driver" user="${db_username}" password="${db_password}"/>
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="348d4179-2c86-4c58-ade3-a94189e288fd" file="db-creds.properties" />
+	<configuration doc:name="Configuration" doc:id="fa38e5ef-d483-4b27-9335-7e13d4a5b7b5" defaultErrorHandler-ref="cupcakeorderserviceError_Handler" />
+	<error-handler name="cupcakeorderserviceError_Handler" doc:id="9c137129-9bd1-4505-b703-07d5d32cdb21" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="6ba0d688-5e14-4f0b-b8ca-500d0969a5e0" type="VALIDATION:INVALID_NUMBER">
+			<set-payload value="Ooops! Something went wrong!" doc:name="Set Payload" doc:id="ad2a8e1d-e184-40da-a7ab-5d9354c8084a" />
+		</on-error-continue>
+	</error-handler>
+	<flow name="HelloFlow" doc:id="3781cdb4-fa81-4b25-9cd5-54ac29aba39e" doc:description="You can leave notes here. This flow sends a simple to the client after the client sends a request to our public facing API.">
+		<http:listener doc:name="Hello Listener" doc:id="8f4647f2-72f9-4b99-bb63-13c510bae7cf" config-ref="HTTP_Listener_config" path="/hello" allowedMethods="GET, POST"/>
+		<set-variable value="#[message.attributes.queryParams.name]" doc:name="Set Name" doc:id="5965e167-17e0-42bb-918a-0d42a7462643" variableName="name"/>
+		<choice doc:name="Choice" doc:id="fab5ff1f-ce8e-43ab-b9d0-78177b7f8bff" >
+			<when expression="#[message.attributes.queryParams.name != null]">
+				<set-payload value="#['Hello, ' ++ message.attributes.queryParams.name as String]" doc:name="Set Payload" doc:id="bd22b953-2589-417e-9aee-e039fc7b496f" />
+			</when>
+			<otherwise >
+				<set-payload value="Hello, client!" doc:name="Set Payload" doc:id="aaab4a1d-26b5-4e29-8835-152293981fee" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Log Name" doc:id="3a189978-7ef4-40d6-bb99-ad3fa04717df" message="#[vars.name]"/>
+	</flow>
+	<flow name="PostCupcake" doc:id="715e5e38-0be3-40f1-8d6a-dcf48324264a" >
+		<http:listener doc:name="Listener" doc:id="122555a8-8346-4df1-a6a7-7d25fca48401" config-ref="HTTP_Listener_config" path="/new" outputMimeType="application/json" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Payload Logger" doc:id="25fc3e15-b30b-4d45-8646-5d5b7699502f" message="#[message.payload]"/>
+	</flow>
+	<flow name="SimpleDatabaseConnection" doc:id="4d9adf0a-6121-4406-ab86-ff0e010126e0" >
+		<http:listener doc:name="Listener" doc:id="a13240e2-ccaa-43b2-b041-ce899031118f" config-ref="HTTP_Listener_config" path="/single-cupcake/{flavor}"/>
+		<set-variable value="#[message.attributes.uriParams.flavor as String]" doc:name="Set Flavor" doc:id="c0873dd0-8ae7-4ded-bd67-cbeabbdf944f" variableName="flavor"/>
+		<logger level="INFO" doc:name="Logger" doc:id="da7e9cbc-469a-4291-8055-d38a31ca6d2a" message="#[vars.flavor]"/>
+		<db:select doc:id="ea36a2da-2b9c-4a4f-822a-6be4e89216fe" config-ref="Postgres_Database_Config">
+			<db:sql ><![CDATA[select * from cupcake where cupcake_flavor = :flavor]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'flavor' : vars.flavor}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="44597d04-0ee3-470a-a720-b34a113cac6d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	cupcakes: payload map {
+		cupcake_flavor: $.cupcake_flavor,
+		cupcake_cost: $.cupcake_cost,
+		cupcake_stock: $.stock
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="AllCupcakesFlow" doc:id="4adc6785-dc19-4eae-8742-f272a2f2e807" >
+		<http:listener doc:name="Listener" doc:id="8468f611-e9c4-47f3-845d-d52d6b774146" config-ref="HTTP_Listener_config" path="/allcupcakes"/>
+		<validation:is-number numberType="INTEGER" doc:name="cost1 Is number" doc:id="5485a829-1dc1-4aa2-9418-eae7c0b155fa" value="#[message.attributes.queryParams.cost1]" minValue="0" message="Cupcake cost is invalid"/>
+		<validation:is-number numberType="INTEGER" doc:name="cost2 Is number" doc:id="1147f7ca-12ee-4b50-a4c2-f958735a5580" value="#[message.attributes.queryParams.cost2]" minValue="message.attributes.queryParams.cost1 + 1" maxValue="1000" message="Cupcake Cost 2 is invalid"/>
+		<set-variable value="#[message.attributes.queryParams.cost1 as Number]" doc:name="Set Cost1" doc:id="60e0fdaf-0cfa-49ba-b144-8907c32bd3c2" variableName="cost1"/>
+		<set-variable value="#[message.attributes.queryParams.cost2 as Number]" doc:name="Set Cost2" doc:id="7968cd9a-6c65-4581-afad-2684c6dcb5a3" variableName="cost2"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3423b7ba-ee02-4e47-8c31-e2751e4f6398" message="#[vars.cost1]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="9d6ca39d-a68a-4d63-9dd6-16e00acbdb19" message="#[vars.cost2]"/>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6beb584f-8aef-4094-a1c3-8163a6fb8d71" type="VALIDATION:INVALID_NUMBER"/>
+		</error-handler>
+	</flow>
+</mule>

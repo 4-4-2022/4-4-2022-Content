@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<apikit:config name="cupcake-order-config"
+		api="cupcake-order.raml" outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus" />
+	<http:request-config
+		name="HTTP_Request_configuration"
+		doc:name="HTTP Request configuration"
+		doc:id="435067bb-a886-4bec-ac43-93569a2c3382">
+		<http:request-connection host="localhost"
+			port="8082">
+		</http:request-connection>
+	</http:request-config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="6d8e792e-da0b-4d3c-9b9c-1a7ca3294ce7" >
+		<wsc:connection wsdlLocation="http://localhost:8081/soap-service/order-service?wsdl" service="OrderServiceImplService" port="orderPort" address="http://service.revature.com/" />
+	</wsc:config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="104ed7fd-67e4-4ca2-9560-c021a6d970d8" />
+	<flow name="cupcake-order-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="cupcake-order-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="cupcake-order-console">
+        <http:listener config-ref="HTTP_Listener_config" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="cupcake-order-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\cupcake\all:cupcake-order-config">
+		<scatter-gather doc:name="Scatter-Gather" doc:id="7670109e-c8ec-40bb-861a-ddbd16e3846e" >
+			<route >
+				<http:request method="GET" doc:name="Request to /cupcake/all" doc:id="5d0fa022-ebdc-4bf7-89f8-0cdd479adad3" config-ref="HTTP_Request_configuration" path="/cupcake/all" />
+				<ee:transform doc:name="Transform Message" doc:id="46a128e0-72ed-4cf3-bee3-bd3eedad1f4c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	cupcakes: payload map {
+		"cupcake_flavor": $.cupcakeFlavor,
+		"calories": $.calories,
+		"is_gluten_free": $.isGlutenFree,
+		"is_vegan": $.isVegan,
+		"cost": $.cost,
+		"stock": $.stock
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<set-variable value="#[payload]" doc:name="Set First JSON Payload" doc:id="32227464-619c-4520-9a46-4f89964bc672" variableName="restJSON"/>
+			</route>
+			<route >
+				<file:read doc:id="e1a11264-8da2-42eb-bb06-84af97f89fb4" doc:name="Read CSV File" config-ref="File_Config" path="C:\Users\17084\Documents\4-4-2022-Content\Mule Basics\cupcakeorderservice\files\cupcakes.csv" />
+				<ee:transform doc:name="Transform Message" doc:id="3fe434c5-d944-4c3a-befc-3f81785985a3">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	cupcakes: payload map {
+		"cupcake_flavor": $.cupcake_flavor,
+		"calories": $.calories,
+		"is_gluten_free": $.is_gluten_free,
+		"is_vegan": $.is_vegan,
+		"cupcake_cost": $.cupcake_cost,
+		"stock": $.stock
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				<set-variable value="#[payload]" doc:name="Set Second JSON Payload" doc:id="e4f10429-6f6e-4d62-9747-64c15af36eb4" variableName="csvJSON"/>
+			</route>
+		</scatter-gather>
+		<set-payload value="#[vars.restJSON ++ vars.csvJSON]" doc:name="Set Payload" doc:id="4ea101bc-0385-4f93-8bd1-a857e4e81c0d" />
+		<logger level="INFO" message="#[message.payload]" />
+    </flow>
+    <!-- NOTE TO SELF: Go back and change the content type for the response for the existing SOAP order service. That said, the WS consumer component works.
+    We know because it does communicate with the SOAP service.-->
+    <flow name="get:\order\all:cupcake-order-config">
+        <wsc:consume doc:id="c795debb-cf4e-409f-ab6d-5e9917edf5be" doc:name="Consume SOAP Order Service" config-ref="Web_Service_Consumer_Config" operation="findAll"/>
+		<logger level="INFO" message="#[message.payload]" />
+    </flow>
+    <flow name="get:\cupcake\cost:cupcake-order-config">
+        <logger level="INFO" message="get:\cupcake\cost:cupcake-order-config" />
+    </flow>
+    <flow name="get:\cupcake\(flavor):cupcake-order-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
+            <ee:variables>
+                <ee:set-variable variableName="flavor">attributes.uriParams.'flavor'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <logger level="INFO" message="get:\cupcake\(flavor):cupcake-order-config" />
+    </flow>
+    <flow name="post:\cupcake\new:application\json:cupcake-order-config">
+        <logger level="INFO" message="post:\cupcake\new:application\json:cupcake-order-config" />
+    </flow>
+</mule>

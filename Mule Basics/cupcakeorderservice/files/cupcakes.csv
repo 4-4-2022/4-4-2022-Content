@@ -1,0 +1,6 @@
+cupcake_flavor,calories,is_gluten_free,is_vegan,cupcake_cost,stock
+strawberry,120,true,false,10,100
+blueberry,200,false,false,5,1000
+blackberry,120,true,false,15,150
+gooseberry,120,true,false,10,100
+raspberry,300,true,true,5,200
